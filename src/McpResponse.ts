@@ -60,9 +60,9 @@ import {handleDialog, listPages} from './tools/pages.js';
 import type {ToolGroups} from './tools/thirdPartyDeveloper.js';
 import type {
   DevToolsData,
+  ElementCssStyles,
   ImageContentData,
   LighthouseData,
-  MatchedStyles,
   Response,
   SnapshotParams,
   WebAuthnAuthenticatorState,
@@ -148,7 +148,7 @@ export class McpResponse implements Response {
     serviceWorkerId?: string;
   };
   #cssStylesData?: {
-    matchedStyles: MatchedStyles;
+    styles: ElementCssStyles;
     options: CssFormatterOptions & PaginationOptions;
   };
   #listExtensions?: boolean;
@@ -290,11 +290,11 @@ export class McpResponse implements Response {
   }
 
   setIncludeCssStyles(
-    matchedStyles: MatchedStyles,
+    styles: ElementCssStyles,
     options: CssFormatterOptions & PaginationOptions,
   ): void {
     this.#cssStylesData = {
-      matchedStyles,
+      styles,
       options,
     };
   }
@@ -1833,7 +1833,7 @@ Call ${handleDialog(this.#config.resolved).name} to handle it before continuing.
         this.#page?.textSnapshot?.resolveCdpElementId(backendNodeId);
 
       const containerDetails = await resolveContainerQueries(
-        this.#cssStylesData.matchedStyles,
+        this.#cssStylesData.styles.matchedStyles,
         resolveUid,
       );
 
@@ -1844,7 +1844,7 @@ Call ${handleDialog(this.#config.resolved).name} to handle it before continuing.
       };
 
       const allRules = CssFormatter.collectRules(
-        this.#cssStylesData.matchedStyles,
+        this.#cssStylesData.styles,
         options,
       );
 
@@ -1865,7 +1865,7 @@ Call ${handleDialog(this.#config.resolved).name} to handle it before continuing.
       }
 
       const formatter = new CssFormatter(
-        this.#cssStylesData.matchedStyles,
+        this.#cssStylesData.styles,
         options,
         rules,
       );
